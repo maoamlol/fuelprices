@@ -1,0 +1,67 @@
+<!doctype html>
+<title>{% block title %}{% endblock %} Fuel prices</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='jquery.dataTables.min.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src={{ url_for("static", filename="jquery-3.5.1.js") }}></script>
+<script src={{ url_for("static", filename="bootstrap.bundle.min.js") }}></script>
+<script src={{ url_for("static", filename="jquery.dataTables.min.js") }}></script>
+<script src={{ url_for("static", filename="dataTables.bootstrap5.min.js") }}></script>
+{#<script type="javascript">#}
+{#    $(document).ready(function () {#}
+{#        $('#stations').DataTable();#}
+{#    });#}
+{#</script>#}
+
+<body class="bg-dark">
+    <section class="content">
+        <header>
+            {% block header %}
+                <button type="button" class="btn btn-primary" onclick="window.location.href='{{ url_for( 'refreshprices') }}';">Refresh</button>
+                {% if warning %}
+                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                        <strong>Warning!</strong> You refreshed too quickly, try again in {{ warntime }} seconds
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {%  endif %}
+            {% endblock %}
+        </header>
+
+        {% block content %}
+
+            <table id="stations" class="table table-dark table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th scope="col">Marke</th>
+                    <th scope="col">E10</th>
+                    <th scope="col">Diesel</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Adresse</th>
+                </tr>
+                </thead>
+                {% for station in stations %}
+                    <tr>
+                        <td>{{ station["brand"] }}</td>
+                        <td>{{ station["e10"] }} €</td>
+                        <td>{{ station["diesel"] }} €</td>
+                        <td>{{ station["name"] }}</td>
+                        <td>{{ station["street"] }} {{ station["houseNumber"] }}</td>
+
+                    </tr>
+                {% endfor %}
+            </table>
+            {{ test_data }}
+
+
+        {% endblock %}
+
+    </section>
+    {% block javascript %}
+        <script>
+        $(document).ready(function () {
+            $('#stations').DataTable();
+        });
+        </script>
+
+    {% endblock %}
+</body>
